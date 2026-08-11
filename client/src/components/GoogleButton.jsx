@@ -1,4 +1,4 @@
-﻿import { useId, useRef, useState } from "react";
+import { useId, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 
@@ -124,16 +124,18 @@ export default function GoogleButton({ label = "Continue with Google" }) {
 
   return (
     <div className={`google-btn-wrapper ${fallbackVisible ? "has-google-fallback" : ""}`}>
-      <button
-        type="button"
-        className="google-btn"
-        onClick={handleClick}
-        disabled={loading}
-        id={`google-signin-${buttonId}`}
-      >
-        {loading ? <span className="google-btn-spinner" /> : <GoogleIcon />}
-        <span>{loading ? "Connecting to Google..." : label}</span>
-      </button>
+      {!fallbackVisible && (
+        <button
+          type="button"
+          className="google-btn"
+          onClick={handleClick}
+          disabled={loading}
+          id={`google-signin-${buttonId}`}
+        >
+          {loading ? <span className="google-btn-spinner" /> : <GoogleIcon />}
+          <span>{loading ? "Connecting to Google..." : label}</span>
+        </button>
+      )}
       <div ref={containerRef} className="google-rendered-btn" aria-live="polite" />
     </div>
   );
