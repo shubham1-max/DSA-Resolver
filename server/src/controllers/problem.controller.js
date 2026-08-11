@@ -1,11 +1,15 @@
 const Problem = require("../models/problem.model");
-const { streamSolution } = require("../services/ai.service");
+const { streamSolution, evaluateStudentAnswer } = require("../services/ai.service");
 const { updateStreak } = require("../services/streak.service");
 const { sanitizeQuestion } = require("../services/prompt.builder"); 
 // POST /problem/solve
 const solveProblem = async (req, res) => {
-  const { question, language = "C++" } = req.body;
+  // Guard: verifyToken middleware should always set req.user
+  if (!req.user?.id) {
+    return res.status(401).json({ error: "Not authenticated" });
+  }
 
+  const { question, language = "C++" } = req.body;
 
   const sanitized = sanitizeQuestion(question);
 
@@ -25,6 +29,24 @@ const solveProblem = async (req, res) => {
   if (!ALLOWED_LANGUAGES.includes(language)) {
     return res.status(400).json({
       error: "Unsupported language",
+    });
+  }
+
+  // Check if user already solved this exact question in the same language
+  const existingProblem = await Problem.findOne({
+    userId: req.user.id,
+    question: question.trim(),
+    language: language,
+    status: "complete"
+  });
+
+  if (existingProblem) {
+    return res.status(200).json({
+      alreadySolved: true,
+      message: `Question already solved on ${existingProblem.solvedAt?.toLocaleDateString()}`,
+      data: existingProblem.aiResponse,
+      problemId: existingProblem._id,
+      solvedAt: existingProblem.solvedAt
     });
   }
 
@@ -53,7 +75,8 @@ try {
     parsed = await streamSolution(
       question,
       language,
-      res
+      res,
+      problemDoc._id,
     );
   } catch (err) {
     console.error("[solveProblem] Error during streaming:", err);
@@ -93,8 +116,18 @@ try {
       }
     );
 
-  const tzOffset = parseInt(req.headers['x-tz-offset']) || 0;
-await updateStreak(req.user.id, tzOffset);
+    res.write(
+      `data: ${JSON.stringify({
+        done: true,
+        data: parsed,
+        problemId: problemDoc._id,
+      })}\n\n`,
+    );
+    res.end();
+
+  const rawOffset = parseInt(req.headers['x-tz-offset']) || 0;
+  const tzOffset = Math.max(-720, Math.min(720, rawOffset));
+  await updateStreak(req.user.id, tzOffset);
 
   } 
   
@@ -210,9 +243,56 @@ const toggleBookmark = async (req, res, next) => {
   }
 };
 
+// POST /problem/evaluate
+const evaluateExplanation = async (req, res, next) => {
+  try {
+    const { question, studentAnswer, correctSolution } = req.body;
+
+    if (!question || typeof question !== 'string' || !question.trim()) {
+      return res.status(400).json({ error: 'question is required and must be a non-empty string' });
+    }
+    if (!studentAnswer || typeof studentAnswer !== 'string' || !studentAnswer.trim()) {
+      return res.status(400).json({ error: 'studentAnswer is required and must be a non-empty string' });
+    }
+    if (!correctSolution || typeof correctSolution !== 'string' || !correctSolution.trim()) {
+      return res.status(400).json({ error: 'correctSolution is required and must be a non-empty string' });
+    }
+
+    const evaluation = await evaluateStudentAnswer(question, studentAnswer, correctSolution);
+
+    return res.status(200).json(evaluation);
+  } catch (err) {
+    next(err);
+  }
+};
+
+// GET /problem/:id
+const getProblemById = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+
+    const problem = await Problem.findOne({
+      _id: id,
+      userId: req.user.id,
+    });
+
+    if (!problem) {
+      return res.status(404).json({
+        error: "Problem not found",
+      });
+    }
+
+    return res.status(200).json(problem);
+  } catch (err) {
+    next(err);
+  }
+};
+
 module.exports = {
   solveProblem,
   getHistory,
   updateHint,
   toggleBookmark,
+  evaluateExplanation,
+  getProblemById,
 };

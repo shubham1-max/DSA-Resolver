@@ -5,6 +5,8 @@ const {
   getHistory,
   updateHint,
   toggleBookmark,
+  evaluateExplanation,
+  getProblemById,
 } = require("../controllers/problem.controller");
 
 const {
@@ -25,8 +27,12 @@ router.post("/solve", solveLimiter, solveProblem);
 
 router.get("/history", getHistory);
 
+router.get("/:id", getProblemById);
+
 router.patch("/:id/hint", updateHint);
 
 router.patch("/:id/bookmark", toggleBookmark);
+
+router.post("/evaluate", evaluateExplanation);
 
 module.exports = router;

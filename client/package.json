@@ -10,8 +10,18 @@
     "preview": "vite preview"
   },
   "dependencies": {
+    "@react-three/drei": "^10.7.7",
+    "@react-three/fiber": "^9.6.1",
+    "chart.js": "^4.5.1",
+    "framer-motion": "^12.40.0",
+    "gsap": "^3.15.0",
+    "lucide-react": "^1.21.0",
     "react": "^19.2.6",
-    "react-dom": "^19.2.6"
+    "react-chartjs-2": "^5.3.1",
+    "react-dom": "^19.2.6",
+    "react-router-dom": "^7.18.0",
+    "react-syntax-highlighter": "^16.1.1",
+    "three": "^0.184.0"
   },
   "devDependencies": {
     "@eslint/js": "^10.0.1",
@@ -22,6 +32,7 @@
     "eslint-plugin-react-hooks": "^7.1.1",
     "eslint-plugin-react-refresh": "^0.5.2",
     "globals": "^17.6.0",
+    "serve": "^14.2.6",
     "vite": "^8.0.12"
   }
 }

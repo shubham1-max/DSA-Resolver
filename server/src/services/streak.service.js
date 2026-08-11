@@ -5,8 +5,10 @@ const User = require("../models/user.models");
 // new Date().getTimezoneOffset() in browser returns this value
 
 const toLocalDateStr = (date, tzOffsetMinutes) => {
-  // Shift the UTC date by the user's offset to get their local date
-  const local = new Date(date.getTime() - tzOffsetMinutes * 60 * 1000);
+  // browser getTimezoneOffset() returns (UTC - local) in minutes
+  // e.g. IST (UTC+5:30) => -330. To get local time: date + (-tzOffset * 60000)
+  // which equals date.getTime() + (-tzOffsetMinutes) * 60 * 1000
+  const local = new Date(date.getTime() + (-tzOffsetMinutes) * 60 * 1000);
 
   return local.toISOString().slice(0, 10); // "YYYY-MM-DD"
 };

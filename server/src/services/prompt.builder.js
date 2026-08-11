@@ -94,8 +94,21 @@ OUTPUT FORMAT:
 - Respond with ONLY a valid JSON object.
 - No preamble, no markdown, no code fences, no explanation.
 - Start your response with { and end with }.
-- All fields listed below must be present.
-- Use "" or [] for any field that is not applicable.
+- All fields listed below must be present and filled with content.
+- NEVER leave fields empty. If a problem lacks a standard brute force, provide a naive exhaustive recursive/iterative approach.
+
+CRITICAL CONSTRAINTS:
+- Keep ALL explanations ultra-compact, informative, and dense.
+- DO NOT use long paragraphs, verbose descriptions, or unnecessary fluff.
+- All array bullet points MUST be exactly 1 short sentence long.
+- Get straight to the core logic without rambling.
+- Provide pure source code with ABSOLUTELY NO comments (e.g. no '//' or '/* */') in ANY of the code blocks.
+- If the language is C++, ALWAYS include 'using namespace std;' at the top and NEVER use the 'std::' prefix anywhere in your code.
+
+STYLE GUIDELINES FOR EACH SOLUTION:
+- Striver (takeUforward): Identify the exact DSA pattern name (e.g., Two Pointer, Monotonic Stack). State brute-to-optimal progression. Write minimal, interview-ready code with short variable names.
+- Love Babbar: Explain from absolute basics. Describe what each variable stores. Include a manual dry run. Use descriptive, self-documenting variable names.
+- NeetCode: Use a visual analogy to explain the algorithm. Write the shortest correct code possible. Focus on space optimization tricks.
 
 The JSON must follow this EXACT structure:
 
@@ -114,13 +127,23 @@ The JSON must follow this EXACT structure:
     "pseudocode": "step by step pseudocode without actual code syntax"
   },
 
-  "intuition": "the core insight — the aha moment in 2-3 sentences",
+  "intuition": [
+    "ultra-short 1-sentence point of the core insight",
+    "ultra-short 1-sentence point explaining the aha moment",
+    "ultra-short 1-sentence point summarizing the logic"
+  ],
 
   "bruteForce": {
-    "explanation": "why brute force works and why it is slow",
-    "code": "complete working brute force code in ${language}",
-    "time": "O(...) with brief reason",
-    "space": "O(...) with brief reason"
+    "explanation": [
+      "ultra-short 1-sentence point on why brute force works",
+      "ultra-short 1-sentence point on the exhaustive approach",
+      "ultra-short 1-sentence point on why it is slow"
+    ],
+    "code": "complete working brute force code in ${language} with NO comments",
+    "time": "O(...)",
+    "timeReason": "1-sentence reason",
+    "space": "O(...)",
+    "spaceReason": "1-sentence reason"
   },
 
   "optimalSolutions": {
@@ -129,32 +152,53 @@ The JSON must follow this EXACT structure:
       {
         "label": "Striver",
         "style": "Pattern-first, interview-ready",
-        "explanation": "Start with: The intuition here is...",
-        "code": "Clean concise ${language} code",
+        "explanation": [
+          "ultra-short 1-sentence bullet point explaining intuition",
+          "ultra-short 1-sentence bullet point detailing the core step",
+          "ultra-short 1-sentence bullet point concluding the logic"
+        ],
+        "code": "Clean concise ${language} code with NO comments",
         "time": "O(...)",
+        "timeReason": "1-sentence reason",
         "space": "O(...)",
+        "spaceReason": "1-sentence reason",
         "keyInsight": "one-liner"
       },
       {
         "label": "Love Babbar",
         "style": "Step-by-step, beginner-friendly",
-        "dryRun": "Manual trace",
-        "explanation": "Let us break this down step by step",
-        "code": "${language} code with comments",
+        "explanation": [
+          "ultra-short 1-sentence bullet point explaining intuition",
+          "ultra-short 1-sentence bullet point detailing the core step",
+          "ultra-short 1-sentence bullet point concluding the logic"
+        ],
+        "dryRun": [
+          "Ultra-concise step 1 (max 1 sentence)",
+          "Ultra-concise step 2",
+          "..."
+        ],
+        "code": "Beginner friendly ${language} code with NO comments",
         "time": "O(...)",
+        "timeReason": "1-sentence reason",
         "space": "O(...)",
+        "spaceReason": "1-sentence reason",
         "whatEachVariableDoes": "variable explanation"
       },
       {
-        "label": "Official Docs",
-        "style": "Formal, pseudocode-first",
-        "pseudocode": "Formal pseudocode",
-        "explanation": "Formal explanation",
-        "code": "${language} code with JSDoc comments",
-        "time": "Theta(...)",
+        "label": "NeetCode",
+        "style": "Visual intuition, ultra-minimalist code",
+        "explanation": [
+          "ultra-short 1-sentence visual analogy for the approach",
+          "ultra-short 1-sentence core trick or optimization",
+          "ultra-short 1-sentence on why this is space-optimal"
+        ],
+        "code": "Ultra-clean minimal ${language} code with NO comments",
+        "time": "O(...)",
+        "timeReason": "1-sentence reason",
         "space": "O(...)",
-        "edgeCases": [],
-        "correctnessProof": "proof"
+        "spaceReason": "1-sentence reason",
+        "intuitionAnalogy": "a real-world analogy explaining the algorithm",
+        "spaceOptimization": "how the solution minimizes memory usage"
       }
     ]
   },

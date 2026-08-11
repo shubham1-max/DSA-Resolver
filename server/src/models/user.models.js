@@ -14,7 +14,17 @@ const user = new Schema({
 
   password: {
     type: String,
-    required: true,
+    required: false,  // Optional — Google-only users won't have a password
+  },
+
+  googleId: {
+    type: String,
+    sparse: true,
+    unique: true,
+  },
+
+  picture: {
+    type: String,  // Google profile photo URL
   },
 
   streak: {
@@ -32,6 +42,17 @@ const user = new Schema({
   },
 
   lastSolvedDate: {
+    type: Date,
+  },
+  
+  isVerified: {
+    type: Boolean,
+    default: false,
+  },
+  otp: {
+    type: String,
+  },
+  otpExpires: {
     type: Date,
   },
 },{timestamps:true});

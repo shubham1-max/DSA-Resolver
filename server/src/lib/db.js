@@ -1,16 +1,12 @@
-const mongoose=require("mongoose")
+const mongoose = require("mongoose");
 require("dotenv").config();
 
+const connectDB = async function(url) {
+  return mongoose.connect(url, {
+    serverSelectionTimeoutMS: 5000,
+    socketTimeoutMS: 45000,
+    maxPoolSize: 10,
+  });
+};
 
-// const URL=process.env.MONGO_URL;
-const connectDB= async function(url){
-
-    const connect= mongoose.connect(url);
-    return connect;
-}
-
-module.exports=connectDB;
-
-
-
-
+module.exports = connectDB;

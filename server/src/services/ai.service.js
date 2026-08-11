@@ -10,7 +10,7 @@ const client = new GoogleGenAI({
 // Streams Gemini tokens to SSE response
 // Returns the parsed+validated aiResponse object
 
-const streamSolution = async (question, language = "C++", res) => {
+const streamSolution = async (question, language = "C++", res, problemId = null) => {
   // SSE headers
   res.setHeader("Content-Type", "text/event-stream");
   res.setHeader("Cache-Control", "no-cache");
@@ -59,23 +59,21 @@ const streamSolution = async (question, language = "C++", res) => {
       return null;
     }
 
-    // Send validated result
-    res.write(
-      `data: ${JSON.stringify({
-        done: true,
-        data: parsed,
-      })}\n\n`,
-    );
-
-    res.end();
-
+    // Do not send done:true or res.end() here. 
+    // Return parsed so the controller can save to DB first, then end the stream.
     return parsed;
   } catch (err) {
     console.error("[aiService] Stream error:", err.message);
 
+    let errorMessage = "Streaming failed. Please try again.";
+    
+    if (err.message.includes("429") || err.message.includes("Quota exceeded")) {
+      errorMessage = "Our AI is currently at capacity. Please try again in 1 minute.";
+    }
+
     res.write(
       `data: ${JSON.stringify({
-        error: "Streaming failed. Please try again.",
+        error: errorMessage,
         retry: true,
       })}\n\n`,
     );
@@ -86,6 +84,55 @@ const streamSolution = async (question, language = "C++", res) => {
   }
 };
 
+const evaluateStudentAnswer = async (question, studentAnswer, correctSolution) => {
+  try {
+    const prompt = `You are a strict but encouraging DSA interview coach evaluating a student's explanation.
+
+The student was asked to explain their understanding of this problem:
+[PROBLEM]: ${question}
+
+[CORRECT APPROACH]: ${correctSolution}
+
+[STUDENT'S EXPLANATION]: ${studentAnswer}
+
+Evaluate the student's explanation for TRUE UNDERSTANDING vs ROTE MEMORIZATION.
+Check if they understand:
+1. Why this approach works (not just what it does)
+2. The core insight or pattern
+3. Time and space complexity reasoning
+4. Edge cases awareness
+
+Respond with ONLY a JSON object:
+{
+  "score": <number 0-100>,
+  "verdict": "<one of: Excellent | Good | Needs Work | Memorized, Not Understood>",
+  "feedback": "<2-3 sentence constructive feedback>",
+  "missed": ["<key concept they missed>", ...]
+}`;
+
+    const response = await client.models.generateContent({
+      model: 'gemini-2.5-flash',
+      contents: prompt,
+      config: {
+        responseMimeType: 'application/json',
+      },
+    });
+
+    const rawText = response.text;
+    if (!rawText) throw new Error("Empty response from AI");
+    return JSON.parse(rawText);
+  } catch (err) {
+    console.error('[aiService] Evaluation error:', err.message);
+    return {
+      score: 0,
+      verdict: 'Error',
+      feedback: 'Could not evaluate. Please try again.',
+      missed: []
+    };
+  }
+};
+
 module.exports = {
   streamSolution,
+  evaluateStudentAnswer,
 };

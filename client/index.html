@@ -4,9 +4,51 @@
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Q-RESOLVER</title>
+    <title>DSA-RESOLVER | AI-Powered DSA Assistant</title>
+    <meta name="description" content="AI-Powered platform to help you plan, trace, and solve Data Structures and Algorithms problems interactively." />
+    <meta property="og:title" content="DSA-RESOLVER | AI-Powered DSA Assistant" />
+    <meta property="og:description" content="AI-Powered platform to help you plan, trace, and solve Data Structures and Algorithms problems interactively." />
+    <meta property="og:type" content="website" />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content="DSA-RESOLVER" />
+    <style>
+      body { margin: 0; background-color: #F7F8FA; }
+      .splash-screen {
+        position: fixed; inset: 0; display: flex; flex-direction: column;
+        align-items: center; justify-content: center; background-color: #F7F8FA;
+        z-index: 9999; font-family: "Inter", system-ui, sans-serif;
+      }
+      .splash-logo-container { display: flex; flex-direction: column; align-items: center; gap: 24px; animation: splash-fade-in 400ms ease-out; }
+      .splash-logo { width: 96px; height: 96px; animation: logo-pulse 1.5s infinite ease-in-out; }
+      .splash-title { font-size: 1.5rem; font-weight: 700; letter-spacing: 0.1em; color: #111827; margin: 0; }
+      .splash-progress-container { width: 140px; height: 3px; background-color: rgba(0, 0, 0, 0.08); border-radius: 4px; overflow: hidden; position: relative; }
+      .splash-progress-bar { position: absolute; top: 0; left: -100%; width: 50%; height: 100%; background-color: #4F46E5; border-radius: 4px; animation: splash-progress-anim 1.5s infinite ease-in-out; }
+      @keyframes logo-pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.08); } }
+      @keyframes splash-progress-anim { 0% { left: -60%; } 100% { left: 120%; } }
+      @keyframes splash-fade-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+      @media (prefers-color-scheme: dark) {
+        body { background-color: #0a0a0a; }
+        .splash-screen { background-color: #0a0a0a; }
+        .splash-title { color: #f3f4f6; }
+        .splash-progress-container { background-color: rgba(255, 255, 255, 0.1); }
+        .splash-progress-bar { background-color: #6366F1; }
+        .splash-bracket-left { stroke: #F4F3FC; }
+      }
+    </style>
   </head>
   <body>
+    <div id="splash" class="splash-screen">
+      <div class="splash-logo-container">
+        <svg class="splash-logo" viewBox="0 0 100 100">
+          <path class="splash-bracket-left" d="M 44 26 L 22 50 L 44 74" fill="none" stroke="#111827" stroke-width="10" stroke-linecap="round" stroke-linejoin="round" />
+          <path d="M 56 26 L 78 50 L 56 74" fill="none" stroke="#8A77F5" stroke-width="10" stroke-linecap="round" stroke-linejoin="round" />
+        </svg>
+        <h1 class="splash-title">DSA-RESOLVER</h1>
+        <div class="splash-progress-container">
+          <div class="splash-progress-bar"></div>
+        </div>
+      </div>
+    </div>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
   </body>
