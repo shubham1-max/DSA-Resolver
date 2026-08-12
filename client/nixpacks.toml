@@ -1,5 +1,4 @@
-[providers]
-exclude = ["staticfile"]
+providers = ["node"]
 
 [phases.build]
 cmds = ["npm install", "npm run build"]
