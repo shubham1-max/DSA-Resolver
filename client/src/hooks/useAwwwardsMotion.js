@@ -15,18 +15,18 @@ export function useAwwwardsMotion(scopeRef, deps = []) {
 
     const ctx = gsap.context(() => {
       gsap.from("[data-hero-reveal]", {
-        y: 16,
+        y: 10,
         opacity: 0,
-        duration: 0.6,
+        duration: 0.25,
         ease: "power2.out",
-        stagger: 0.08,
+        stagger: 0.04,
       });
 
       gsap.utils.toArray("[data-reveal]").forEach((item) => {
         gsap.from(item, {
-          y: 34,
+          y: 20,
           opacity: 0,
-          duration: 0.72,
+          duration: 0.3,
           ease: "power3.out",
           scrollTrigger: {
             trigger: item,
@@ -38,11 +38,11 @@ export function useAwwwardsMotion(scopeRef, deps = []) {
 
       gsap.utils.toArray("[data-reveal-group]").forEach((group) => {
         gsap.from(group.children, {
-          y: 30,
+          y: 15,
           opacity: 0,
-          duration: 0.62,
+          duration: 0.25,
           ease: "power2.out",
-          stagger: 0.07,
+          stagger: 0.04,
           scrollTrigger: {
             trigger: group,
             start: "top 84%",

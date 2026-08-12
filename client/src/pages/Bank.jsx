@@ -39,35 +39,33 @@ export default function Bank() {
 
     const ctx = gsap.context(() => {
       gsap.from(".bank-hero > *", {
-        y: 24,
+        y: 10,
         opacity: 0,
-        duration: 0.62,
+        duration: 0.25,
         ease: "power2.out",
-        stagger: 0.08,
+        stagger: 0.04,
       });
 
       gsap.from(".bank-stat", {
-        y: 28,
+        y: 15,
         opacity: 0,
-        duration: 0.55,
+        duration: 0.25,
         ease: "power2.out",
-        stagger: 0.06,
+        stagger: 0.04,
       });
 
       gsap.from(".bank-toolbar", {
         opacity: 0,
         duration: 0.5,
         ease: "power2.out",
-        delay: 0.2,
       });
 
       gsap.from(".bank-list-shell > *", {
-        y: 28,
+        y: 15,
         opacity: 0,
-        duration: 0.55,
+        duration: 0.25,
         ease: "power2.out",
-        stagger: 0.06,
-        delay: 0.3,
+        stagger: 0.04,
       });
     }, root);
 
