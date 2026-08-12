@@ -85,6 +85,7 @@ export default function Solve() {
             <div className="solve-hero-video-container">
               <video 
                 src="/videos/demo_clip.mp4" 
+                poster="/videos/demo_clip.jpg"
                 autoPlay 
                 loop 
                 muted 
