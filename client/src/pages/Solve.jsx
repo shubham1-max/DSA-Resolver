@@ -83,10 +83,13 @@ export default function Solve() {
 
           <div className="solve-hero-right" data-hero-reveal style={{ animationDelay: "200ms" }}>
             <div className="solve-hero-video-container">
-              <img 
-                src="/images/demo_clip.jpg" 
-                alt="Demo" 
-                style={{ width: "100%", height: "100%", objectFit: "cover", borderRadius: "12px", border: "1px solid var(--border-color)" }}
+              <video 
+                src="/videos/demo_clip.mp4" 
+                autoPlay 
+                loop 
+                muted 
+                playsInline 
+                preload="auto"
               />
             </div>
           </div>
