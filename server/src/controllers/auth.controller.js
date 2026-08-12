@@ -57,21 +57,9 @@ const register = async function (req, res) {
     const emailSent = await sendVerificationEmail(user.email, otp);
     
     if (!emailSent) {
-      // Railway blocks outbound SMTP on free tiers. Bypassing email verification so user is not permanently blocked.
-      user.isVerified = true;
-      user.otp = undefined;
-      user.otpExpires = undefined;
-      await user.save();
-      
-      const payload = { id: user._id, name: user.name, email: user.email };
-      const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: "1d" });
-      
-      return res.status(201).json({
-        msg: "Email blocked by host. Account auto-verified.",
-        requiresVerification: false,
-        token,
-        user: { id: user._id, name: user.name, email: user.email }
-      });
+      // Restore strict error handling since we expect the HTTP API to always work
+      await User.deleteOne({ email: normalizedEmail, isVerified: false });
+      return res.status(500).json({ error: "Failed to send verification email via HTTP API. Please check server configuration." });
     }
 
     return res.status(201).json({
