@@ -54,7 +54,13 @@ const register = async function (req, res) {
     }
 
     // Send email
-    await sendVerificationEmail(user.email, otp);
+    const emailSent = await sendVerificationEmail(user.email, otp);
+    
+    if (!emailSent) {
+      // If email fails to send, delete the unverified user so they can try again later
+      await User.deleteOne({ email: normalizedEmail, isVerified: false });
+      return res.status(500).json({ error: "Failed to send verification email. Please check server email configuration." });
+    }
 
     return res.status(201).json({
       msg: "Verification code sent to your email",
@@ -63,7 +69,7 @@ const register = async function (req, res) {
     });
   } catch (err) {
     console.error(err);
-    return res.status(500).json({ msg: "server error" });
+    return res.status(500).json({ error: "server error" });
   }
 };
 
@@ -131,9 +137,13 @@ const resendOtp = async function (req, res) {
     user.otpExpires = otpExpires;
     await user.save();
 
-    await sendVerificationEmail(user.email, otp);
+    const emailSent = await sendVerificationEmail(user.email, otp);
+    
+    if (!emailSent) {
+      return res.status(500).json({ error: "Failed to resend verification email. Please check server email configuration." });
+    }
 
-    return res.status(200).json({ msg: "Verification code resent" });
+    return res.status(200).json({ msg: "A new verification code has been sent to your email" });
   } catch (err) {
     console.error(err);
     return res.status(500).json({ msg: "Server error" });
@@ -156,7 +166,10 @@ const forgotPassword = async function (req, res) {
     user.otpExpires = otpExpires;
     await user.save();
 
-    await sendVerificationEmail(user.email, otp);
+    const emailSent = await sendVerificationEmail(user.email, otp);
+    if (!emailSent) {
+      return res.status(500).json({ error: "Failed to send reset email. Please check server email configuration." });
+    }
 
     return res.status(200).json({ msg: "If an account exists, an email was sent" });
   } catch (err) {
