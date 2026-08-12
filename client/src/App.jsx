@@ -62,7 +62,7 @@ function AppRoutes() {
           </motion.div>
         )}
       </AnimatePresence>
-      <AnimatePresence mode="wait">
+      <AnimatePresence>
         {window.splashFinishedState && (
           <Suspense fallback={
             <div className="app-shell" style={{ display: 'flex', flexDirection: 'column', height: '100vh', padding: '24px' }}>

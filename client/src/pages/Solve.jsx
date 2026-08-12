@@ -89,7 +89,7 @@ export default function Solve() {
                 loop 
                 muted 
                 playsInline 
-                preload="metadata"
+                preload="auto"
               />
             </div>
           </div>
