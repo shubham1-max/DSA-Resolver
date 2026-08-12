@@ -1,3 +1,5 @@
+const https = require("https");
+
 /**
  * Send an OTP verification email using Brevo's HTTP API (Port 443)
  * This entirely bypasses Railway's outbound SMTP block on ports 465/587.
@@ -5,11 +7,11 @@
  * @param {string} to - The recipient's email address
  * @param {string} otp - The 6-digit OTP code
  */
-const sendVerificationEmail = async (to, otp) => {
-  try {
+const sendVerificationEmail = (to, otp) => {
+  return new Promise((resolve) => {
     if (!process.env.BREVO_API_KEY) {
       console.warn("[EmailService] BREVO_API_KEY missing. Cannot send HTTP email.");
-      return false;
+      return resolve(false);
     }
 
     const htmlContent = `
@@ -27,36 +29,50 @@ const sendVerificationEmail = async (to, otp) => {
       </div>
     `;
 
-    const response = await fetch("https://api.brevo.com/v3/smtp/email", {
-      method: "POST",
-      headers: {
-        "accept": "application/json",
-        "api-key": process.env.BREVO_API_KEY,
-        "content-type": "application/json"
+    const data = JSON.stringify({
+      sender: { 
+        email: process.env.EMAIL_USER || "noreply@dsa-resolver.com", 
+        name: "DSA Resolver" 
       },
-      body: JSON.stringify({
-        sender: { 
-          email: process.env.EMAIL_USER || "noreply@dsa-resolver.com", 
-          name: "DSA Resolver" 
-        },
-        to: [{ email: to }],
-        subject: "Your DSA Resolver Verification Code",
-        htmlContent: htmlContent
-      })
+      to: [{ email: to }],
+      subject: "Your DSA Resolver Verification Code",
+      htmlContent: htmlContent
     });
 
-    if (!response.ok) {
-      const errorData = await response.json();
-      console.error("[EmailService] HTTP API Error:", errorData);
-      return false;
-    }
+    const options = {
+      hostname: 'api.brevo.com',
+      path: '/v3/smtp/email',
+      method: 'POST',
+      headers: {
+        'accept': 'application/json',
+        'api-key': process.env.BREVO_API_KEY,
+        'content-type': 'application/json',
+        'content-length': Buffer.byteLength(data)
+      }
+    };
 
-    console.log("[EmailService] Verification email sent successfully via HTTP API");
-    return true;
-  } catch (error) {
-    console.error("[EmailService] Error sending email via HTTP API:", error);
-    return false;
-  }
+    const req = https.request(options, (res) => {
+      let responseBody = '';
+      res.on('data', (chunk) => responseBody += chunk);
+      res.on('end', () => {
+        if (res.statusCode >= 200 && res.statusCode < 300) {
+          console.log("[EmailService] Verification email sent successfully via HTTPS API");
+          resolve(true);
+        } else {
+          console.error("[EmailService] HTTP API Error:", res.statusCode, responseBody);
+          resolve(false);
+        }
+      });
+    });
+
+    req.on('error', (error) => {
+      console.error("[EmailService] Error sending email via HTTPS API:", error);
+      resolve(false);
+    });
+
+    req.write(data);
+    req.end();
+  });
 };
 
 module.exports = {
