@@ -57,9 +57,21 @@ const register = async function (req, res) {
     const emailSent = await sendVerificationEmail(user.email, otp);
     
     if (!emailSent) {
-      // If email fails to send, delete the unverified user so they can try again later
-      await User.deleteOne({ email: normalizedEmail, isVerified: false });
-      return res.status(500).json({ error: "Failed to send verification email. Please check server email configuration." });
+      // Railway blocks outbound SMTP on free tiers. Bypassing email verification so user is not permanently blocked.
+      user.isVerified = true;
+      user.otp = undefined;
+      user.otpExpires = undefined;
+      await user.save();
+      
+      const payload = { id: user._id, name: user.name, email: user.email };
+      const token = jwt.sign(payload, process.env.JWT_SECRET, { expiresIn: "1d" });
+      
+      return res.status(201).json({
+        msg: "Email blocked by host. Account auto-verified.",
+        requiresVerification: false,
+        token,
+        user: { id: user._id, name: user.name, email: user.email }
+      });
     }
 
     return res.status(201).json({
@@ -168,7 +180,7 @@ const forgotPassword = async function (req, res) {
 
     const emailSent = await sendVerificationEmail(user.email, otp);
     if (!emailSent) {
-      return res.status(500).json({ error: "Failed to send reset email. Please check server email configuration." });
+      return res.status(500).json({ error: "Password resets are temporarily unavailable because the server's email provider is blocked by the host. Please contact support." });
     }
 
     return res.status(200).json({ msg: "If an account exists, an email was sent" });
