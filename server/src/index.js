@@ -70,8 +70,8 @@ app.use((err, req, res, next) => {
   res.status(500).json({ error: "Internal Server Error" });
 });
 
-const server = app.listen(PORT, () => {
-  console.log(`Server running on port: ${PORT}`);
+const server = app.listen(PORT, '0.0.0.0', () => {
+  console.log(`Server running strictly on 0.0.0.0:${PORT}`);
 });
 
 server.on('error', (err) => {
