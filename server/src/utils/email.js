@@ -1,16 +1,24 @@
 const nodemailer = require("nodemailer");
+const dns = require("dns");
+dns.setDefaultResultOrder("ipv4first");
 
 // Create a reusable transporter using the default SMTP transport
 const createTransporter = () => {
   return nodemailer.createTransport({
-    service: "gmail",
+    host: "smtp.gmail.com",
+    port: 465,
+    secure: true,
     auth: {
       user: process.env.EMAIL_USER,
       pass: process.env.EMAIL_PASS,
     },
-    connectionTimeout: 5000, // 5 seconds
-    greetingTimeout: 5000,
-    socketTimeout: 5000,
+    // Force IPv4 to prevent hanging on cloud platforms (e.g. Railway)
+    tls: {
+      rejectUnauthorized: false
+    },
+    connectionTimeout: 10000,
+    greetingTimeout: 10000,
+    socketTimeout: 10000,
   });
 };
 
