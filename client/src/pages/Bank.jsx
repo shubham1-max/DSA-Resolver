@@ -18,17 +18,25 @@ export default function Bank() {
   const [languageFilter, setLanguageFilter] = useState("All");
   const [savedOnly, setSavedOnly] = useState(false);
   const [query, setQuery] = useState("");
+  const [debouncedQuery, setDebouncedQuery] = useState("");
   const bankRef = useRef(null);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      setDebouncedQuery(query);
+    }, 150);
+    return () => clearTimeout(timer);
+  }, [query]);
 
   const filtered = useMemo(() => {
     return history.filter((item) => {
-      const matchesQuery = item.question?.toLowerCase().includes(query.toLowerCase());
-      if (query.trim() && !matchesQuery) return false;
+      const matchesQuery = item.question?.toLowerCase().includes(debouncedQuery.toLowerCase());
+      if (debouncedQuery.trim() && !matchesQuery) return false;
       if (savedOnly && !item.bookmarked) return false;
       if (languageFilter !== "All" && item.language !== languageFilter) return false;
       return true;
     });
-  }, [history, languageFilter, savedOnly, query]);
+  }, [history, languageFilter, savedOnly, debouncedQuery]);
 
   const savedCount = history.filter((item) => item.bookmarked).length;
   const uniqueSolvesCount = new Set(history.map(item => item.question?.trim().toLowerCase())).size;

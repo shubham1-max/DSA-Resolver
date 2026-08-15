@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { getSession } from "../api";
 import { useStream } from "./useStream";
 
@@ -29,13 +29,26 @@ export function detectTopic(question) {
 }
 
 export function useSolver({ refreshAfterSolve, setNotice, initialQuestion = "" }) {
-  const [question, setQuestion] = useState(initialQuestion);
+  const [question, setQuestion] = useState(() => {
+    if (initialQuestion) return initialQuestion;
+    try {
+      return localStorage.getItem("dsa_resolver_draft_question") || "";
+    } catch {
+      return "";
+    }
+  });
   const [language, setLanguage] = useState("C++");
   const [result, setResult] = useState(null);
   const [problemId, setProblemId] = useState(null);
   const [hintsUsed, setHintsUsed] = useState(0);
   const [detectedTopic, setDetectedTopic] = useState("");
   const { streamText, loading, resetStream, cancelStream, startStream } = useStream();
+
+  useEffect(() => {
+    try {
+      localStorage.setItem("dsa_resolver_draft_question", question);
+    } catch {}
+  }, [question]);
 
   async function resolveProblem() {
     const trimmed = question.trim();

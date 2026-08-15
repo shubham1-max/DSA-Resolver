@@ -1,3 +1,4 @@
+import { memo } from "react";
 import {
   BarElement,
   CategoryScale,
@@ -51,7 +52,7 @@ function buildWeeklyCounts(history) {
   return { labels, counts };
 }
 
-export default function StreakChart({ history = [], streak = 0, longestStreak = 0 }) {
+export default memo(function StreakChart({ history = [], streak = 0, longestStreak = 0 }) {
   const { labels, counts } = buildWeeklyCounts(history);
   const { theme } = useTheme();
 

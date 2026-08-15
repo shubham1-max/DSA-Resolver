@@ -1,6 +1,6 @@
-import { useRef, useState } from 'react';
+import { useRef, useState, memo } from 'react';
 
-export default function SpotlightCard({ children, className = '', spotlightColor, ...props }) {
+export default memo(function SpotlightCard({ children, className = '', spotlightColor, ...props }) {
   const divRef = useRef(null);
   const [position, setPosition] = useState({ x: 0, y: 0 });
   const [opacity, setOpacity] = useState(0);

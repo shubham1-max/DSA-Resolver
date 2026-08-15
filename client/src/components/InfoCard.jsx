@@ -1,4 +1,6 @@
-export default function InfoCard({ title, meta, children }) {
+import { memo } from 'react';
+
+export default memo(function InfoCard({ title, meta, children }) {
   return (
     <article className="info-card">
       <div className="info-title">

@@ -5,6 +5,8 @@ export function useStream() {
   const [streamText, setStreamText] = useState("");
   const [loading, setLoading] = useState(false);
   const abortRef = useRef(null);
+  const bufferRef = useRef("");
+  const updatePendingRef = useRef(false);
 
   const resetStream = useCallback(() => {
     setStreamText("");
@@ -27,13 +29,25 @@ export function useStream() {
 
     setLoading(true);
     setStreamText("");
+    bufferRef.current = "";
+    updatePendingRef.current = false;
 
     try {
       const { data, problemId, alreadySolved, message, solvedAt } = await solveProblem({
         question,
         language,
         signal: controller.signal,
-        onToken: (token) => setStreamText((current) => current + token),
+        onToken: (token) => {
+          bufferRef.current += token;
+          if (!updatePendingRef.current) {
+            updatePendingRef.current = true;
+            setTimeout(() => {
+              setStreamText((current) => current + bufferRef.current);
+              bufferRef.current = "";
+              updatePendingRef.current = false;
+            }, 60); // Batch updates to run ~16 times a second
+          }
+        },
       });
 
       return { data, problemId, alreadySolved, message, solvedAt };
@@ -42,6 +56,12 @@ export function useStream() {
         abortRef.current = null;
       }
       setLoading(false);
+      
+      // Flush any remaining text in the buffer after completion
+      if (bufferRef.current) {
+        setStreamText((current) => current + bufferRef.current);
+        bufferRef.current = "";
+      }
     }
   }, []);
 
