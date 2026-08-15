@@ -164,7 +164,7 @@ export default function Solve() {
                 type="button"
                 onClick={handleSolve}
                 disabled={solver.loading}
-                data-magnetic
+                data-glow
                 aria-label={solver.loading ? "Resolving problem, please wait" : "Resolve the entered DSA problem"}
               >
                 <span style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
