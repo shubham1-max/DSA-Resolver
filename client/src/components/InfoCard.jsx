@@ -10,4 +10,4 @@ export default memo(function InfoCard({ title, meta, children }) {
       {children}
     </article>
   );
-}
+});

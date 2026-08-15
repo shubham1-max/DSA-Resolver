@@ -131,4 +131,4 @@ export default memo(function StreakChart({ history = [], streak = 0, longestStre
       </div>
     </InfoCard>
   );
-}
+});

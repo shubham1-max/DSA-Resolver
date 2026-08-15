@@ -40,4 +40,4 @@ export default memo(function SpotlightCard({ children, className = '', spotlight
       </div>
     </div>
   );
-}
+});
