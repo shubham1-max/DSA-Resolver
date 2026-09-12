@@ -63,7 +63,9 @@ export function AuthProvider({ children }) {
   }
 
   async function signIn(email, password) {
-    const normalizedEmail = String(email || "").trim().toLowerCase();
+    const normalizedEmail = String(email || "")
+      .trim()
+      .toLowerCase();
     const payload = await login(normalizedEmail, password);
     if (payload?.requiresVerification) {
       return { requiresVerification: true, email: normalizedEmail };
@@ -169,7 +171,9 @@ export function AuthProvider({ children }) {
   }
 
   const stats = useMemo(() => {
-    const uniqueSolvesCount = new Set(history.map(item => item.question?.trim().toLowerCase())).size;
+    const uniqueSolvesCount = new Set(
+      history.map((item) => item.question?.trim().toLowerCase()),
+    ).size;
     const solved = user?.totalSolved ?? uniqueSolvesCount;
     const streak = user?.streak ?? 0;
     const bookmarked = history.filter((item) => item.bookmarked).length;

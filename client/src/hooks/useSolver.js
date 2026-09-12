@@ -37,6 +37,7 @@ export function useSolver({ refreshAfterSolve, setNotice, initialQuestion = "" }
       return "";
     }
   });
+
   const [language, setLanguage] = useState("C++");
   const [result, setResult] = useState(null);
   const [problemId, setProblemId] = useState(null);
@@ -44,6 +45,7 @@ export function useSolver({ refreshAfterSolve, setNotice, initialQuestion = "" }
   const [detectedTopic, setDetectedTopic] = useState("");
   const { streamText, loading, resetStream, cancelStream, startStream } = useStream();
 
+  
   useEffect(() => {
     try {
       localStorage.setItem("dsa_resolver_draft_question", question);

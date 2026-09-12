@@ -53,7 +53,7 @@ export default function Home() {
 
   function openSolver() {
     if (!problem.trim()) return;
-    navigate("/solve", { state: { question: problem } });
+    navigate("/solve", { state: { question: problem } });  //redirect to the solve page
   }
 
   function handleWorkspaceTilt(event) {
@@ -142,7 +142,7 @@ export default function Home() {
               <span><Binary size={15} /> live reasoning</span>
               <span><CheckCircle2 size={15} /> saved review</span>
             </div>
-            <button className="editor-resolve" type="button" onClick={openSolver}>Resolve <Wand2 size={16} /></button>
+            <button className="editor-resolve" type="button" onClick={openSolver}>Resolve <Wand2 size={16} /></button>  
           </div>
         </section>
         </div>

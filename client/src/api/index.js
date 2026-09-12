@@ -26,7 +26,10 @@ export function clearSession() {
   }
 }
 
+
+//centralized request for multiple end points
 async function request(path, options = {}) {
+
   const session = getSession();
   const headers = {
     "Content-Type": "application/json",
@@ -37,6 +40,8 @@ async function request(path, options = {}) {
     headers.Authorization = `Bearer ${session.token}`;
   }
 
+
+  //contains the responce => res.json((JWT)token,user) from thee backend when user logged in 
   const response = await fetch(`${API_BASE}${path}`, {
     ...options,
     headers,
@@ -61,12 +66,15 @@ async function request(path, options = {}) {
   return payload;
 }
 
+
 export function login(email, password) {
   return request("/user/login", {
     method: "POST",
     body: JSON.stringify({ email, password }),
   });
 }
+
+
 
 export function register(name, email, password) {
   return request("/user/register", {
@@ -75,12 +83,16 @@ export function register(name, email, password) {
   });
 }
 
+
+
 export function verifyOtp(email, otp) {
   return request("/user/verify-otp", {
     method: "POST",
     body: JSON.stringify({ email, otp }),
   });
 }
+
+
 
 export function resendOtp(email) {
   return request("/user/resend-otp", {
@@ -89,12 +101,16 @@ export function resendOtp(email) {
   });
 }
 
+
+
 export function forgotPassword(email) {
   return request("/user/forgot-password", {
     method: "POST",
     body: JSON.stringify({ email }),
   });
 }
+
+
 
 export function resetPassword(email, otp, newPassword) {
   return request("/user/reset-password", {
@@ -103,12 +119,16 @@ export function resetPassword(email, otp, newPassword) {
   });
 }
 
+
+
 export function googleAuth(idToken) {
   return request("/user/auth/google", {
     method: "POST",
     body: JSON.stringify({ idToken }),
   });
 }
+
+
 
 export function completeGoogleSignup(pendingToken, password) {
   return request("/user/complete-google-signup", {
@@ -117,9 +137,11 @@ export function completeGoogleSignup(pendingToken, password) {
   });
 }
 
+
 export function getMe() {
   return request("/user/me");
 }
+
 
 export function getHistory(page = 1, limit = 20) {
   return request(`/problem/history?page=${page}&limit=${limit}`);
@@ -205,6 +227,7 @@ export function evaluateAnswer({ question, studentAnswer, correctSolution }) {
     body: JSON.stringify({ question, studentAnswer, correctSolution }),
   });
 }
+
 
 export function getProblemById(id) {
   return request(`/problem/${id}`, { method: "GET" });

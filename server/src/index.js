@@ -25,6 +25,7 @@ app.use(helmet());
 // Body parsing
 app.use(express.json());
 
+
 // CORS
 app.use(cors({
   origin: function (origin, callback) {
@@ -42,6 +43,8 @@ app.use(cors({
   },
   credentials: true,
 }));
+
+
 
 // Global rate limiter — 150 requests per 15 minutes per IP
 const globalLimiter = rateLimit({

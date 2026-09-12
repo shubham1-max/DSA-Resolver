@@ -42,6 +42,7 @@ const streamSolution = async (question, language = "C++", res, problemId = null)
       );
     }
 
+    
     // Validate final JSON
     let parsed;
 
@@ -109,6 +110,7 @@ Respond with ONLY a JSON object:
   "feedback": "<2-3 sentence constructive feedback>",
   "missed": ["<key concept they missed>", ...]
 }`;
+
 
     const response = await client.models.generateContent({
       model: 'gemini-2.5-flash',

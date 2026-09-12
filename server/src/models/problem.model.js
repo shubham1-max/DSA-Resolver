@@ -20,6 +20,7 @@ const problemSchema = new Schema(
        enum: ["C++", "Java", "Python", "JavaScript", "C"],
       default: "C++",
     },
+    
     aiResponse: {
       type: Schema.Types.Mixed,
       default: null,
@@ -42,13 +43,7 @@ const problemSchema = new Schema(
       type: Boolean,
       default: false,
     },
-
-    shareId: {
-      type: String,
-      default: () => nanoid(8),
-      unique: true,
-    },
-
+    
     isPublic: {
       type: Boolean,
       default: false,

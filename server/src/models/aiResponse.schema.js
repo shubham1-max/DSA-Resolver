@@ -1,5 +1,6 @@
 const { z } = require("zod");
-
+ 
+//zod validation for structuring the Ai responce  in  particular format
 const aiResponseSchema = z.object({
   topic: z.string(),
 

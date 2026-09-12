@@ -2,6 +2,7 @@ const Problem = require("../models/problem.model");
 const { streamSolution, evaluateStudentAnswer } = require("../services/ai.service");
 const { updateStreak } = require("../services/streak.service");
 const { sanitizeQuestion } = require("../services/prompt.builder"); 
+
 // POST /problem/solve
 const solveProblem = async (req, res) => {
   // Guard: verifyToken middleware should always set req.user
@@ -104,8 +105,6 @@ try {
   }
 
 
-
-
   if (parsed) {
     await Problem.findByIdAndUpdate(
       problemDoc._id,
@@ -140,6 +139,9 @@ try {
     );
   }
 };
+
+
+
 
 // GET /problem/history
 const getHistory = async (req, res, next) => {
@@ -185,6 +187,8 @@ const getHistory = async (req, res, next) => {
   }
 };
 
+
+
 // PATCH /problem/:id/hint
 const updateHint = async (req, res, next) => {
   try {
@@ -217,6 +221,8 @@ const updateHint = async (req, res, next) => {
   }
 };
 
+
+
 // PATCH /problem/:id/bookmark
 const toggleBookmark = async (req, res, next) => {
   try {
@@ -243,6 +249,7 @@ const toggleBookmark = async (req, res, next) => {
   }
 };
 
+
 // POST /problem/evaluate
 const evaluateExplanation = async (req, res, next) => {
   try {
@@ -265,6 +272,7 @@ const evaluateExplanation = async (req, res, next) => {
     next(err);
   }
 };
+
 
 // GET /problem/:id
 const getProblemById = async (req, res, next) => {

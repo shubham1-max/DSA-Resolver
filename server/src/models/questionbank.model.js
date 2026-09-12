@@ -26,22 +26,6 @@ const Questionbank = new Schema({
       trim: true,
     },
 
-    difficulty: {
-      type: String,
-      enum: ["Easy", "Medium", "Hard"],
-      required: true,
-    },
-
-    company: [{
-      type: String,
-      trim: true,
-    }],
-
-    links: [{
-      type: String,
-      trim: true,
-    }],
-
     cachedAIResponse: {
       type: Schema.Types.Mixed,
       default: null,
