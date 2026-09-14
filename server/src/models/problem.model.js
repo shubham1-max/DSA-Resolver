@@ -44,6 +44,12 @@ const problemSchema = new Schema(
       default: false,
     },
     
+    shareId: {
+      type: String,
+      default: () => nanoid(10),
+      unique: true,
+    },
+
     isPublic: {
       type: Boolean,
       default: false,
